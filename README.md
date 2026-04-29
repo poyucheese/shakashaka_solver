@@ -96,5 +96,6 @@ At the end of solving, programs print:
 
 ## Notes
 
+- PUZ-PRE v3 Shakashaka puzzles can be found at https://puzz.link/db/?type=shakashaka.
 - `logical_solver.c` may finish with unresolved cells if pure logic is insufficient.
 - `solver.c` continues with backtracking to find a complete valid solution when needed.
