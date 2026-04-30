@@ -333,6 +333,222 @@ static bool load_puzzle_board(const char *input_file, int ***board_out, int *hei
     return true;
 }
 
+static bool check_triangle_candidate_with_rectangle_completion(int **board, int height, int width, int row, int col, int candidate_type) {
+    int target_row = row;
+    int target_col = col;
+    switch (candidate_type) {
+        case CAND_TRI_UP_LEFT:
+            if (board[row - 1][col + 1] == TRI_UP_LEFT) {
+                int count = 0;
+                while (board[row - 1][col + 1] == TRI_UP_LEFT) {
+                    count++;
+                    row--;
+                    col++;
+                }
+                if (board[row][col + 1] == TRI_UP_RIGHT) {
+                    col++;
+                    while (board[row + 1][col + 1] == TRI_UP_RIGHT) {
+                        row++;
+                        col++;
+                    }
+                    if (board[row + 1][col] == TRI_DOWN_RIGHT) {
+                        row++;
+                        while (board[row + 1][col - 1] == TRI_DOWN_RIGHT && count > 0) {
+                            count--;
+                            row++;
+                            col--;
+                        }
+                        if (count == 0) return true;
+                    }
+                }
+            }
+            row = target_row;
+            col = target_col;
+            if (board[row + 1][col - 1] == TRI_UP_LEFT) {
+                int count = 0;
+                while (board[row + 1][col - 1] == TRI_UP_LEFT) {
+                    count++;
+                    row++;
+                    col--;
+                }
+                if (board[row + 1][col] == TRI_DOWN_LEFT) {
+                    row++;
+                    while (board[row + 1][col + 1] == TRI_DOWN_LEFT) {
+                        row++;
+                        col++;
+                    }
+                    if (board[row][col + 1] == TRI_DOWN_RIGHT) {
+                        col++;
+                        while (board[row - 1][col + 1] == TRI_DOWN_RIGHT && count > 0) {
+                            count--;
+                            row--;
+                            col++;
+                        }
+                        if (count == 0) return true;
+                    }
+                }
+            }
+            return false;
+        case CAND_TRI_UP_RIGHT:
+            if (board[row - 1][col - 1] == TRI_UP_RIGHT) {
+                int count = 0;
+                while (board[row - 1][col - 1] == TRI_UP_RIGHT) {
+                    count++;
+                    row--;
+                    col--;
+                }
+                if (board[row][col - 1] == TRI_UP_LEFT) {
+                    col--;
+                    while (board[row + 1][col - 1] == TRI_UP_LEFT) {
+                        row++;
+                        col--;
+                    }
+                    if (board[row + 1][col] == TRI_DOWN_LEFT) {
+                        row++;
+                        while (board[row + 1][col + 1] == TRI_DOWN_LEFT && count > 0) {
+                            count--;
+                            row++;
+                            col++;
+                        }
+                        if (count == 0) return true;
+                    }
+                }
+            }
+            row = target_row;
+            col = target_col;
+            if (board[row + 1][col + 1] == TRI_UP_RIGHT) {
+                int count = 0;
+                while (board[row + 1][col + 1] == TRI_UP_RIGHT) {
+                    count++;
+                    row++;
+                    col++;
+                }
+                if (board[row + 1][col] == TRI_DOWN_RIGHT) {
+                    row++;
+                    while (board[row + 1][col - 1] == TRI_DOWN_RIGHT) {
+                        row++;
+                        col--;
+                    }
+                    if (board[row][col - 1] == TRI_DOWN_LEFT) {
+                        col--;
+                        while (board[row - 1][col - 1] == TRI_DOWN_LEFT && count > 0) {
+                            count--;
+                            row--;
+                            col--;
+                        }
+                        if (count == 0) return true;
+                    }
+                }
+            }
+            return false;
+        case CAND_TRI_DOWN_LEFT:
+            if (board[row - 1][col - 1] == TRI_DOWN_LEFT) {
+                int count = 0;
+                while (board[row - 1][col - 1] == TRI_DOWN_LEFT) {
+                    count++;
+                    row--;
+                    col--;
+                }
+                if (board[row - 1][col] == TRI_UP_LEFT) {
+                    row--;
+                    while (board[row - 1][col + 1] == TRI_UP_LEFT) {
+                        row--;
+                        col++;
+                    }
+                    if (board[row][col + 1] == TRI_UP_RIGHT) {
+                        col++;
+                        while (board[row + 1][col + 1] == TRI_UP_RIGHT && count > 0) {
+                            count--;
+                            row++;
+                            col++;
+                        }
+                        if (count == 0) return true;
+                    }
+                }
+            }
+            row = target_row;
+            col = target_col;
+            if (board[row + 1][col + 1] == TRI_DOWN_LEFT) {
+                int count = 0;
+                while (board[row + 1][col + 1] == TRI_DOWN_LEFT) {
+                    count++;
+                    row++;
+                    col++;
+                }
+                if (board[row][col + 1] == TRI_DOWN_RIGHT) {
+                    col++;
+                    while (board[row - 1][col + 1] == TRI_DOWN_RIGHT) {
+                        row--;
+                        col++;
+                    }
+                    if (board[row - 1][col] == TRI_UP_RIGHT) {
+                        row--;
+                        while (board[row - 1][col - 1] == TRI_UP_RIGHT && count > 0) {
+                            count--;
+                            row--;
+                            col--;
+                        }
+                        if (count == 0) return true;
+                    }
+                }
+            }
+            return false;
+        case CAND_TRI_DOWN_RIGHT:
+            if (board[row - 1][col + 1] == TRI_DOWN_RIGHT) {
+                int count = 0;
+                while (board[row - 1][col + 1] == TRI_DOWN_RIGHT) {
+                    count++;
+                    row--;
+                    col++;
+                }
+                if (board[row - 1][col] == TRI_UP_RIGHT) {
+                    row--;
+                    while (board[row - 1][col - 1] == TRI_UP_RIGHT) {
+                        row--;
+                        col--;
+                    }
+                    if (board[row][col - 1] == TRI_UP_LEFT) {
+                        col--;
+                        while (board[row + 1][col - 1] == TRI_UP_LEFT && count > 0) {
+                            count--;
+                            row++;
+                            col--;
+                        }
+                        if (count == 0) return true;
+                    }
+                }
+            }
+            row = target_row;
+            col = target_col;
+            if (board[row + 1][col - 1] == TRI_DOWN_RIGHT) {
+                int count = 0;
+                while (board[row + 1][col - 1] == TRI_DOWN_RIGHT) {
+                    count++;
+                    row++;
+                    col--;
+                }
+                if (board[row][col - 1] == TRI_DOWN_LEFT) {
+                    col--;
+                    while (board[row - 1][col - 1] == TRI_DOWN_LEFT) {
+                        row--;
+                        col--;
+                    }
+                    if (board[row - 1][col] == TRI_UP_LEFT) {
+                        row--;
+                        while (board[row - 1][col + 1] == TRI_UP_LEFT && count > 0) {
+                            count--;
+                            row--;
+                            col++;
+                        }
+                        if (count == 0) return true;
+                    }
+                }
+            }
+            return false;
+        default:
+            return false;
+    }
+}
 static bool run_logic_until_stable(int **board, int height, int width, int *unsolved, int *iteration_out) {
     bool update = true;
 
@@ -431,7 +647,8 @@ static bool run_logic_until_stable(int **board, int height, int width, int *unso
                         if ((board[row + 1][col] == TRI_DOWN_LEFT && (has_black_edge_toward(board[row][col - 1], EDGE_RIGHT) || board[row][col - 1] == WHITE)) ||
                             (board[row][col + 1] == TRI_UP_RIGHT && (has_black_edge_toward(board[row - 1][col], EDGE_DOWN) || board[row - 1][col] == WHITE)) ||
                             (board[row - 1][col + 1] == TRI_UP_LEFT && board[row][col + 1] == WHITE) ||
-                            (board[row + 1][col - 1] == TRI_UP_LEFT && board[row + 1][col] == WHITE)) {
+                            (board[row + 1][col - 1] == TRI_UP_LEFT && board[row + 1][col] == WHITE) ||
+                            check_triangle_candidate_with_rectangle_completion(board, height, width, row, col, CAND_TRI_UP_LEFT)) {
                             board[row][col] = TRI_UP_LEFT;
                         }
                         else if (has_black_edge_toward(board[row + 1][col], EDGE_UP) ||
@@ -457,7 +674,8 @@ static bool run_logic_until_stable(int **board, int height, int width, int *unso
                         if ((board[row + 1][col] == TRI_DOWN_RIGHT && (has_black_edge_toward(board[row][col + 1], EDGE_LEFT) || board[row][col + 1] == WHITE)) ||
                             (board[row][col - 1] == TRI_UP_LEFT && (has_black_edge_toward(board[row - 1][col], EDGE_DOWN) || board[row - 1][col] == WHITE)) ||
                             (board[row - 1][col - 1] == TRI_UP_RIGHT && board[row][col - 1] == WHITE) ||
-                            (board[row + 1][col + 1] == TRI_UP_RIGHT && board[row + 1][col] == WHITE)) {
+                            (board[row + 1][col + 1] == TRI_UP_RIGHT && board[row + 1][col] == WHITE) ||
+                            check_triangle_candidate_with_rectangle_completion(board, height, width, row, col, CAND_TRI_UP_RIGHT)) {
                             board[row][col] = TRI_UP_RIGHT;
                         }
                         else if (has_black_edge_toward(board[row + 1][col], EDGE_UP) ||
@@ -483,7 +701,8 @@ static bool run_logic_until_stable(int **board, int height, int width, int *unso
                         if ((board[row - 1][col] == TRI_UP_LEFT && (has_black_edge_toward(board[row][col - 1], EDGE_RIGHT) || board[row][col - 1] == WHITE)) ||
                             (board[row][col + 1] == TRI_DOWN_RIGHT && (has_black_edge_toward(board[row + 1][col], EDGE_UP) || board[row + 1][col] == WHITE)) ||
                             (board[row - 1][col - 1] == TRI_DOWN_LEFT && board[row - 1][col] == WHITE) ||
-                            (board[row + 1][col + 1] == TRI_DOWN_LEFT && board[row][col + 1] == WHITE)) {
+                            (board[row + 1][col + 1] == TRI_DOWN_LEFT && board[row][col + 1] == WHITE) ||
+                            check_triangle_candidate_with_rectangle_completion(board, height, width, row, col, CAND_TRI_DOWN_LEFT)) {
                             board[row][col] = TRI_DOWN_LEFT;
                         }
                         else if (has_black_edge_toward(board[row - 1][col], EDGE_DOWN) ||
@@ -509,7 +728,8 @@ static bool run_logic_until_stable(int **board, int height, int width, int *unso
                         if ((board[row - 1][col] == TRI_UP_RIGHT && (has_black_edge_toward(board[row][col + 1], EDGE_LEFT) || board[row][col + 1] == WHITE)) ||
                             (board[row][col - 1] == TRI_DOWN_LEFT && (has_black_edge_toward(board[row + 1][col], EDGE_UP) || board[row + 1][col] == WHITE)) ||
                             (board[row - 1][col + 1] == TRI_DOWN_RIGHT && board[row - 1][col] == WHITE) ||
-                            (board[row + 1][col - 1] == TRI_DOWN_RIGHT && board[row][col - 1] == WHITE)) {
+                            (board[row + 1][col - 1] == TRI_DOWN_RIGHT && board[row][col - 1] == WHITE) ||
+                            check_triangle_candidate_with_rectangle_completion(board, height, width, row, col, CAND_TRI_DOWN_RIGHT)) {
                             board[row][col] = TRI_DOWN_RIGHT;
                         }
                         else if (has_black_edge_toward(board[row - 1][col], EDGE_DOWN) ||
