@@ -861,9 +861,6 @@ int main(int argc, char *argv[]) {
     printf("unsolved: %d\n", unsolved);
     printf("iterations: %d\n", iteration);
 
-    printf("Debug:\n");
-    printf("row 4 col 7 is %d\n", board[4][7]);
-    printf("row 4 col 8 is %d\n", board[4][8]);
     clock_t end_time = clock();
     if (start_time != (clock_t)-1 && end_time != (clock_t)-1) {
         double elapsed_seconds = (double)(end_time - start_time) / (double)CLOCKS_PER_SEC;
