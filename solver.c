@@ -759,7 +759,11 @@ static bool run_logic_until_stable(int **board, int height, int width, int *unso
                             (board[row - 1][col - 1] == WHITE && ((board[row - 1][col] == WHITE && has_black_edge_toward(board[row][col - 1], EDGE_UP)) || (board[row][col - 1] == WHITE && has_black_edge_toward(board[row - 1][col], EDGE_LEFT)))) ||
                             (board[row - 1][col + 1] == WHITE && ((board[row - 1][col] == WHITE && has_black_edge_toward(board[row][col + 1], EDGE_UP)) || (board[row][col + 1] == WHITE && has_black_edge_toward(board[row - 1][col], EDGE_RIGHT)))) ||
                             (board[row + 1][col - 1] == WHITE && ((board[row + 1][col] == WHITE && has_black_edge_toward(board[row][col - 1], EDGE_DOWN)) || (board[row][col - 1] == WHITE && has_black_edge_toward(board[row + 1][col], EDGE_LEFT)))) ||
-                            (board[row + 1][col + 1] == WHITE && ((board[row + 1][col] == WHITE && has_black_edge_toward(board[row][col + 1], EDGE_DOWN)) || (board[row][col + 1] == WHITE && has_black_edge_toward(board[row + 1][col], EDGE_RIGHT))))
+                            (board[row + 1][col + 1] == WHITE && ((board[row + 1][col] == WHITE && has_black_edge_toward(board[row][col + 1], EDGE_DOWN)) || (board[row][col + 1] == WHITE && has_black_edge_toward(board[row + 1][col], EDGE_RIGHT)))) ||
+                            (has_black_edge_toward(board[row - 1][col], EDGE_DOWN) && (board[row + 1][col] == TRI_DOWN_LEFT || board[row + 1][col] == TRI_DOWN_RIGHT)) ||
+                            (has_black_edge_toward(board[row + 1][col], EDGE_UP) && (board[row - 1][col] == TRI_UP_LEFT || board[row - 1][col] == TRI_UP_RIGHT)) ||
+                            (has_black_edge_toward(board[row][col - 1], EDGE_RIGHT) && (board[row][col + 1] == TRI_UP_RIGHT || board[row][col + 1] == TRI_DOWN_RIGHT)) ||
+                            (has_black_edge_toward(board[row][col + 1], EDGE_LEFT) && (board[row][col - 1] == TRI_UP_LEFT || board[row][col - 1] == TRI_DOWN_LEFT))
                            ) {
                             board[row][col] &= ~CAND_WHITE;
                         }
