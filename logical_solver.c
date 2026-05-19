@@ -719,7 +719,9 @@ int main(int argc, char *argv[]) {
                                  (board[row + 1][col] == WHITE && !(board[row + 1][col - 1] == TRI_UP_LEFT) && !(board[row + 1][col - 1] & CAND_TRI_UP_LEFT)) ||
                                  (board[row][col + 1] == WHITE && !(board[row - 1][col + 1] == TRI_UP_LEFT) && !(board[row - 1][col + 1] & CAND_TRI_UP_LEFT)) ||
                                  (!is_candidate_cell(board[row + 1][col + 1]) && !(board[row + 1][col + 1] == WHITE || board[row + 1][col + 1] == TRI_DOWN_RIGHT)) ||
-                                 (board[row - 1][col] == WHITE && board[row][col - 1] == WHITE && board[row - 1][col - 1] == WHITE)
+                                 (board[row - 1][col] == WHITE && board[row][col - 1] == WHITE && board[row - 1][col - 1] == WHITE) ||
+                                 (is_candidate_cell(board[row - 1][col]) && is_candidate_cell(board[row - 1][col - 1]) && is_candidate_cell(board[row][col - 1]) && 
+                                    has_black_edge_toward(board[row - 2][col], EDGE_DOWN) && (has_black_edge_toward(board[row - 2][col - 1], EDGE_DOWN) || has_black_edge_toward(board[row - 1][col - 2], EDGE_RIGHT)) && has_black_edge_toward(board[row][col - 2], EDGE_RIGHT))
                                 ) {
                             board[row][col] &= ~CAND_TRI_UP_LEFT;
                         }
@@ -746,7 +748,9 @@ int main(int argc, char *argv[]) {
                                  (board[row + 1][col] == WHITE && !(board[row + 1][col + 1] == TRI_UP_RIGHT) && !(board[row + 1][col + 1] & CAND_TRI_UP_RIGHT)) ||
                                  (board[row][col - 1] == WHITE && !(board[row - 1][col - 1] == TRI_UP_RIGHT) && !(board[row - 1][col - 1] & CAND_TRI_UP_RIGHT)) ||
                                  (!is_candidate_cell(board[row + 1][col - 1]) && !(board[row + 1][col - 1] == WHITE || board[row + 1][col - 1] == TRI_DOWN_LEFT)) ||
-                                 (board[row - 1][col] == WHITE && board[row][col + 1] == WHITE && board[row - 1][col + 1] == WHITE)
+                                 (board[row - 1][col] == WHITE && board[row][col + 1] == WHITE && board[row - 1][col + 1] == WHITE) ||
+                                 (is_candidate_cell(board[row - 1][col]) && is_candidate_cell(board[row - 1][col + 1]) && is_candidate_cell(board[row][col + 1]) &&
+                                    has_black_edge_toward(board[row - 2][col], EDGE_DOWN) && (has_black_edge_toward(board[row - 2][col + 1], EDGE_DOWN) || has_black_edge_toward(board[row - 1][col + 2], EDGE_LEFT)) && has_black_edge_toward(board[row][col + 2], EDGE_LEFT))
                                 ) {
                             board[row][col] &= ~CAND_TRI_UP_RIGHT;
                         }
@@ -773,7 +777,9 @@ int main(int argc, char *argv[]) {
                                  (board[row - 1][col] == WHITE && !(board[row - 1][col - 1] == TRI_DOWN_LEFT) && !(board[row - 1][col - 1] & CAND_TRI_DOWN_LEFT)) ||
                                  (board[row][col + 1] == WHITE && !(board[row + 1][col + 1] == TRI_DOWN_LEFT) && !(board[row + 1][col + 1] & CAND_TRI_DOWN_LEFT)) ||
                                  (!is_candidate_cell(board[row - 1][col + 1]) && !(board[row - 1][col + 1] == WHITE || board[row - 1][col + 1] == TRI_UP_RIGHT)) ||
-                                 (board[row + 1][col] == WHITE && board[row][col - 1] == WHITE && board[row + 1][col - 1] == WHITE)
+                                 (board[row + 1][col] == WHITE && board[row][col - 1] == WHITE && board[row + 1][col - 1] == WHITE) ||
+                                 (is_candidate_cell(board[row + 1][col]) && is_candidate_cell(board[row + 1][col - 1]) && is_candidate_cell(board[row][col - 1]) &&
+                                    has_black_edge_toward(board[row + 2][col], EDGE_UP) && (has_black_edge_toward(board[row + 2][col - 1], EDGE_UP) || has_black_edge_toward(board[row + 1][col - 2], EDGE_RIGHT)) && has_black_edge_toward(board[row][col - 2], EDGE_RIGHT))
                                 ) {
                             board[row][col] &= ~CAND_TRI_DOWN_LEFT;
                         }
@@ -800,7 +806,9 @@ int main(int argc, char *argv[]) {
                                  (board[row - 1][col] == WHITE && !(board[row - 1][col + 1] == TRI_DOWN_RIGHT) && !(board[row - 1][col + 1] & CAND_TRI_DOWN_RIGHT)) ||
                                  (board[row][col - 1] == WHITE && !(board[row + 1][col - 1] == TRI_DOWN_RIGHT) && !(board[row + 1][col - 1] & CAND_TRI_DOWN_RIGHT)) ||
                                  (!is_candidate_cell(board[row - 1][col - 1]) && !(board[row - 1][col - 1] == WHITE || board[row - 1][col - 1] == TRI_UP_LEFT)) ||
-                                 (board[row + 1][col] == WHITE && board[row][col + 1] == WHITE && board[row + 1][col + 1] == WHITE)
+                                 (board[row + 1][col] == WHITE && board[row][col + 1] == WHITE && board[row + 1][col + 1] == WHITE) ||
+                                 (is_candidate_cell(board[row + 1][col]) && is_candidate_cell(board[row + 1][col + 1]) && is_candidate_cell(board[row][col + 1]) &&
+                                    has_black_edge_toward(board[row + 2][col], EDGE_UP) && (has_black_edge_toward(board[row + 2][col + 1], EDGE_UP) || has_black_edge_toward(board[row + 1][col + 2], EDGE_LEFT)) && has_black_edge_toward(board[row][col + 2], EDGE_LEFT))
                                 ) {
                             board[row][col] &= ~CAND_TRI_DOWN_RIGHT;
                         }
@@ -817,7 +825,17 @@ int main(int argc, char *argv[]) {
                             (has_black_edge_toward(board[row - 1][col], EDGE_DOWN) && (board[row + 1][col] == TRI_DOWN_LEFT || board[row + 1][col] == TRI_DOWN_RIGHT)) ||
                             (has_black_edge_toward(board[row + 1][col], EDGE_UP) && (board[row - 1][col] == TRI_UP_LEFT || board[row - 1][col] == TRI_UP_RIGHT)) ||
                             (has_black_edge_toward(board[row][col - 1], EDGE_RIGHT) && (board[row][col + 1] == TRI_UP_RIGHT || board[row][col + 1] == TRI_DOWN_RIGHT)) ||
-                            (has_black_edge_toward(board[row][col + 1], EDGE_LEFT) && (board[row][col - 1] == TRI_UP_LEFT || board[row][col - 1] == TRI_DOWN_LEFT))
+                            (has_black_edge_toward(board[row][col + 1], EDGE_LEFT) && (board[row][col - 1] == TRI_UP_LEFT || board[row][col - 1] == TRI_DOWN_LEFT)) ||
+                            ((board[row][col + 1] & CAND_WHITE) && has_black_edge_toward(board[row][col - 1], EDGE_RIGHT) && has_black_edge_toward(board[row][col + 2], EDGE_LEFT) && 
+                                ((board[row - 1][col] == WHITE && !(board[row - 1][col + 1] == WHITE) && !(board[row - 1][col + 1] & CAND_WHITE)) ||
+                                 (board[row - 1][col + 1] == WHITE && !(board[row - 1][col] == WHITE) && !(board[row - 1][col] & CAND_WHITE)) ||
+                                 (board[row + 1][col] == WHITE && !(board[row + 1][col + 1] == WHITE) && !(board[row + 1][col + 1] & CAND_WHITE)) ||
+                                 (board[row + 1][col + 1] == WHITE && !(board[row + 1][col] == WHITE) && !(board[row + 1][col] & CAND_WHITE)))) ||
+                            ((board[row + 1][col] & CAND_WHITE) && has_black_edge_toward(board[row - 1][col], EDGE_DOWN) && has_black_edge_toward(board[row + 2][col], EDGE_UP) && 
+                                ((board[row][col - 1] == WHITE && !(board[row + 1][col - 1] == WHITE) && !(board[row + 1][col - 1] & CAND_WHITE)) ||
+                                 (board[row + 1][col - 1] == WHITE && !(board[row][col - 1] == WHITE) && !(board[row][col - 1] & CAND_WHITE)) ||
+                                 (board[row][col + 1] == WHITE && !(board[row + 1][col + 1] == WHITE) && !(board[row + 1][col + 1] & CAND_WHITE)) ||
+                                 (board[row + 1][col + 1] == WHITE && !(board[row][col + 1] == WHITE) && !(board[row][col + 1] & CAND_WHITE)))) 
                            ) {
                             board[row][col] &= ~CAND_WHITE;
                         }
